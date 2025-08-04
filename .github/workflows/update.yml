@@ -40,3 +40,25 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
+
+      # Prepare Kaggle dataset folder
+      - name: Prepare Kaggle dataset folder
+        run: |
+          mkdir -p kaggle_dataset
+          cp data/aggregated_deepstatemap.csv kaggle_dataset/
+          cat > kaggle_dataset/dataset-metadata.json <<EOF
+          {
+            "id": "zsoltlazar/automated-deepstatemap-occupied-areas",
+            "title": "Automated DeepStateMap Occupied Areas",
+            "licenses": [{"name": "CC0-1.0"}]
+          }
+          EOF
+
+      # Upload to Kaggle
+      - name: Upload CSV to Kaggle
+        env:
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+        run: |
+          pip install kaggle
+          kaggle datasets version -p kaggle_dataset -m "Auto update $(date +'%Y-%m-%d')" --dir-mode zip
