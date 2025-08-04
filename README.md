@@ -18,12 +18,15 @@ The `data/` folder contains up-to-date Multipolygons in GeoJSON format.
 - **Filename format:** `deepstatemap_data_<update_date>.geojson`
 - **Update frequency:** Daily, at 03:00 UTC via GitHub Actions
 
+> **Note:** The Kaggle dataset upload process creates a temporary `kaggle_dataset` folder inside the GitHub Actions runner environment to prepare files for upload. This folder **is not created or committed** inside GitHub repository and does not affect repo structure.
+
 ---
 
 ## 🛠️ Enhancements by Zsolt Lazar
 
 - Added automatic **daily CSV aggregation** across all GeoJSON files
 - Ensures a continuously growing CSV file for easier analysis
+- **Automatic upload of the updated dataset to [Kaggle](https://www.kaggle.com/datasets/zsoltlazar/automated-deepstatemap-occupied-areas/data)** for easy access and sharing
 - Structured for **OSINT dashboards** and **geospatial workflows**
 - Improved code readability and modularity
 
