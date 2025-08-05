@@ -103,7 +103,6 @@ def extract_date_from_filename(filename):
     except ValueError:
         return None
 
-
 def process_geojson(filepath):
     date = extract_date_from_filename(filepath)
     if date is None:
@@ -139,12 +138,12 @@ def process_geojson(filepath):
 
     return pd.DataFrame(processed_rows)
 
-
 def update_aggregated_csv():
     """Scan all geojson files in OUTPUT_DIR, process them, and update the aggregated CSV."""
     if os.path.exists(CSV_PATH):
         existing_df = pd.read_csv(CSV_PATH, parse_dates=["date"])
-        existing_dates = set(existing_df["date"].dt.date)
+        existing_df["date"] = pd.to_datetime(existing_df["date"]).dt.date  # ✅ Normalize existing dates
+        existing_dates = set(existing_df["date"])
     else:
         existing_df = pd.DataFrame()
         existing_dates = set()
@@ -172,7 +171,7 @@ def update_aggregated_csv():
         else:
             combined_df = pd.concat([existing_df, new_df], ignore_index=True)
 
-        # ✅ Fix: Enforce proper date formatting (no time part)
+        # ✅ FIX: Normalize all dates to remove any time part
         combined_df["date"] = pd.to_datetime(combined_df["date"]).dt.date
 
         combined_df.to_csv(CSV_PATH, index=False)
