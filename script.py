@@ -172,7 +172,9 @@ def update_aggregated_csv():
         else:
             combined_df = pd.concat([existing_df, new_df], ignore_index=True)
 
-        combined_df["date"] = combined_df["date"].astype(str)  # Ensures it's 'YYYY-MM-DD' only
+        # ✅ Fix: Enforce proper date formatting (no time part)
+        combined_df["date"] = pd.to_datetime(combined_df["date"]).dt.date
+
         combined_df.to_csv(CSV_PATH, index=False)
         logger.info(f"✅ Updated CSV saved to {CSV_PATH}")
     else:
